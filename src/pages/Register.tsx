@@ -6,13 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import toast from 'react-hot-toast';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { setUser, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'register' | 'verify'>('register');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -23,34 +25,56 @@ const Register = () => {
   const [otpCode, setOtpCode] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Redirect if already logged in
   if (user) {
     navigate('/dashboard', { replace: true });
     return null;
   }
 
-  // ... (keep validateForm unchanged) ...
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.first_name.trim()) newErrors.first_name = 'First name is required';
-    if (!formData.last_name.trim()) newErrors.last_name = 'Last name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
-    if (!formData.phone_number) newErrors.phone_number = 'Phone number is required';
-    else if (!/^\+91\d{10}$/.test(formData.phone_number)) newErrors.phone_number = 'Phone must be in format +91xxxxxxxxxx';
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
-    
+
+    if (!formData.first_name.trim()) {
+      newErrors.first_name = 'First name is required';
+    }
+
+    if (!formData.last_name.trim()) {
+      newErrors.last_name = 'Last name is required';
+    }
+
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+
+    if (!formData.phone_number) {
+      newErrors.phone_number = 'Phone number is required';
+    } else if (!/^\+91\d{10}$/.test(formData.phone_number)) {
+      newErrors.phone_number = 'Phone must be in format +91xxxxxxxxxx';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+      newErrors.password = 'Password must contain uppercase, lowercase, and number';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     setLoading(true);
     try {
       await authAPI.register(formData);
+      setPhoneNumber(formData.phone_number);
       setStep('verify');
       toast.success('OTP sent to your phone!');
     } catch (error: any) {
@@ -71,19 +95,17 @@ const Register = () => {
 
     setLoading(true);
     try {
-      // Backend requires email and password again for verification
-      await authAPI.verifyRegistration({
-        phone_number: formData.phone_number,
+      const { data } = await authAPI.verifyRegistration({
+        phone_number: phoneNumber,
         otp_code: otpCode,
-        email: formData.email,
-        password: formData.password,
-        first_name: formData.first_name,
-        last_name: formData.last_name
       });
       
-      // Backend does NOT return tokens here, so we must send user to login
-      toast.success('Account verified successfully! Please login.');
-      navigate('/login');
+      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+      
+      toast.success('Account verified successfully!');
+      navigate('/dashboard');
     } catch (error: any) {
       const message = error.response?.data?.detail || 'Verification failed';
       toast.error(message);
@@ -100,15 +122,17 @@ const Register = () => {
     }
   };
 
-  // ... (Return statement/JSX remains exactly the same as your original file) ...
   if (step === 'verify') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+        <div className="absolute top-6 right-6">
+          <ThemeToggle />
+        </div>
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold">Verify your account</CardTitle>
             <CardDescription>
-              Enter the 6-digit code sent to {formData.phone_number}
+              Enter the 6-digit code sent to {phoneNumber}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -154,6 +178,9 @@ const Register = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Create an account</CardTitle>

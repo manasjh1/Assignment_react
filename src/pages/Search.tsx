@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search as SearchIcon, Mic, Camera, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Search = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Search = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header with back button */}
-      <header className="p-4">
+      <header className="p-4 flex justify-between items-center">
         <Button
           variant="ghost"
           size="icon"
@@ -28,6 +29,7 @@ const Search = () => {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
+        <ThemeToggle />
       </header>
 
       {/* Main search area */}

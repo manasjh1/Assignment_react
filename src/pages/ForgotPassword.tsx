@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import toast from 'react-hot-toast';
 
 const ForgotPassword = () => {
@@ -92,6 +93,9 @@ const ForgotPassword = () => {
   if (step === 'reset') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+        <div className="absolute top-6 right-6">
+          <ThemeToggle />
+        </div>
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold">Reset your password</CardTitle>
@@ -166,6 +170,9 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Forgot password?</CardTitle>

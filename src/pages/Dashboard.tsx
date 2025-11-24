@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import toast from 'react-hot-toast';
 
 const Dashboard = () => {
@@ -36,6 +37,7 @@ const Dashboard = () => {
             >
               <Search className="h-5 w-5" />
             </Button>
+            <ThemeToggle />
             <Button variant="outline" onClick={handleLogout}>
               Logout
             </Button>
