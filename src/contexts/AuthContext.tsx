@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authAPI, User } from '@/services/api';
 
+// ... (Keep interfaces unchanged) ...
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -35,9 +36,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (token && savedUser) {
         try {
           setUser(JSON.parse(savedUser));
-          const { data } = await authAPI.getCurrentUser();
-          setUser(data);
-          localStorage.setItem('user', JSON.stringify(data));
         } catch (error) {
           localStorage.removeItem('access_token');
           localStorage.removeItem('user');
@@ -51,10 +49,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const { data } = await authAPI.login({ email, password });
-    localStorage.setItem('access_token', data.access_token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    setUser(data.user);
+    const response = await authAPI.login({ email, password });
+    
+    // NOW WE USE THE REAL DATA FROM BACKEND
+    localStorage.setItem('access_token', response.data.access_token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    setUser(response.data.user);
   };
 
   const logout = async () => {
