@@ -99,6 +99,12 @@ export interface SearchResponse {
   error?: string;
 }
 
+// --- IMAGE GENERATION INTERFACES ---
+export interface ImageResponse {
+  image_url: string;
+  prompt: string;
+}
+
 export const authAPI = {
   register: (data: RegisterData) => 
     api.post<{ message: string; phone_number: string; temp_id: string }>('/auth/register', data),
@@ -123,10 +129,15 @@ export const authAPI = {
 };
 
 // --- SEARCH API FUNCTION ---
-// Ensure this uses POST and sends a JSON body
 export const searchAPI = {
   search: (query: string) => 
     api.post<SearchResponse>('/search', { query, max_results: 10 }),
+};
+
+// --- IMAGE API FUNCTION ---
+export const imageAPI = {
+  generate: (prompt: string) =>
+    api.post<ImageResponse>('/image/generate', { prompt }),
 };
 
 export default api;

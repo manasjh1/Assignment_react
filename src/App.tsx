@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import Search from "./pages/Search";
+import ImageGeneration from "./pages/ImageGeneration";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +68,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Search />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/image-generation"
+                element={
+                  <ProtectedRoute>
+                    <ImageGeneration />
                   </ProtectedRoute>
                 }
               />

@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, UserCog, Shield, KeyRound } from 'lucide-react';
+import { Search, UserCog, Shield, KeyRound, Image as ImageIcon } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import toast from 'react-hot-toast';
 
@@ -131,6 +131,16 @@ const Dashboard = () => {
                 <Search className="h-4 w-4" />
                 Search
               </Button>
+              
+              <Button 
+                variant="default" 
+                className="w-full justify-start gap-2"
+                onClick={() => navigate('/image-generation')}
+              >
+                <ImageIcon className="h-4 w-4" />
+                Generate Image
+              </Button>
+
               <Button 
                 variant="outline" 
                 className="w-full justify-start gap-2"
