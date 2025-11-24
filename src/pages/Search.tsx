@@ -3,15 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import searchAPI from '@/services/api';
-
-// Define SearchResult type locally
-interface SearchResult {
-  title: string;
-  snippet: string;
-  url: string;
-  source: string;
-}
+// Changed: Import searchAPI (named export) and SearchResult type
+import { searchAPI, type SearchResult } from '@/services/api';
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -33,7 +26,8 @@ const Search = () => {
     setHasSearched(true);
     
     try {
-      const response = await searchAPI.get(`/search?q=${encodeURIComponent(searchQuery)}`);
+      // Changed: Call the search method which performs a POST request
+      const response = await searchAPI.search(searchQuery);
       setResults(response.data.results);
     } catch (error) {
       console.error('Search error:', error);
