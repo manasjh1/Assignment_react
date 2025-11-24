@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search } from 'lucide-react';
+import { Search, UserCog, Shield, KeyRound } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import toast from 'react-hot-toast';
 
@@ -21,10 +21,16 @@ const Dashboard = () => {
     }
   };
 
+  const handleNotImplemented = (feature: string) => {
+    toast(`${feature} feature coming soon!`, {
+      icon: '🚧',
+    });
+  };
+
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
       <header className="border-b bg-card">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <h1 className="text-xl font-semibold">Dashboard</h1>
@@ -45,7 +51,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="flex-1 container mx-auto px-4 py-12">
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-2">
             Welcome back, {user.first_name}!
@@ -101,7 +107,7 @@ const Dashboard = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Member Since</p>
                 <p className="font-medium">
-                  {new Date(user.created_at).toLocaleDateString('en-US', {
+                  {new Date(user.created_at || Date.now()).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
@@ -117,19 +123,47 @@ const Dashboard = () => {
               <CardDescription>Common tasks</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full justify-start">
+              <Button 
+                variant="default" 
+                className="w-full justify-start gap-2"
+                onClick={() => navigate('/search')}
+              >
+                <Search className="h-4 w-4" />
+                Search
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start gap-2"
+                onClick={() => handleNotImplemented("Update Profile")}
+              >
+                <UserCog className="h-4 w-4" />
                 Update Profile
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start gap-2"
+                onClick={() => navigate('/forgot-password')}
+              >
+                <KeyRound className="h-4 w-4" />
                 Change Password
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start gap-2"
+                onClick={() => handleNotImplemented("Security Settings")}
+              >
+                <Shield className="h-4 w-4" />
                 Security Settings
               </Button>
             </CardContent>
           </Card>
         </div>
       </main>
+
+      <footer className="py-6 text-center text-sm text-muted-foreground border-t bg-card/50 mt-auto">
+        <p>&copy; {new Date().getFullYear()} MCP Search. All rights reserved.</p>
+        <p className="mt-1">Made by <span className="font-medium text-foreground">Manas Jha</span></p>
+      </footer>
     </div>
   );
 };

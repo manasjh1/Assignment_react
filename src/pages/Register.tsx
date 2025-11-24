@@ -98,6 +98,8 @@ const Register = () => {
       const { data } = await authAPI.verifyRegistration({
         phone_number: phoneNumber,
         otp_code: otpCode,
+        email: formData.email,
+        password: formData.password,
       });
       
       localStorage.setItem('access_token', data.access_token);

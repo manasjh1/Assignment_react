@@ -17,7 +17,23 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ... (Keep interceptors.response and other interfaces like RegisterData, LoginData, etc. unchanged) ...
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export interface RegisterData {
   email: string;
@@ -58,12 +74,29 @@ export interface User {
   created_at?: string;
 }
 
-// --- UPDATE THIS INTERFACE ---
 export interface AuthResponse {
   access_token: string;
   refresh_token: string;
   token_type: string;
-  user: User; // <--- This tells TypeScript that 'data.user' exists!
+  user: User;
+}
+
+// --- SEARCH INTERFACES ---
+export interface SearchResult {
+  title: string;
+  snippet: string;
+  url: string;
+  source: string;
+}
+
+export interface SearchResponse {
+  results: SearchResult[];
+  query: string;
+  total_results: number;
+  status: string;
+  search_engine: string;
+  protocol: string;
+  error?: string;
 }
 
 export const authAPI = {
@@ -71,7 +104,7 @@ export const authAPI = {
     api.post<{ message: string; phone_number: string; temp_id: string }>('/auth/register', data),
   
   verifyRegistration: (data: VerifyOTPData) => 
-    api.post<AuthResponse>('/auth/verify-registration', data), // Updated return type
+    api.post<AuthResponse>('/auth/verify-registration', data),
   
   login: (data: LoginData) => 
     api.post<AuthResponse>('/auth/login', data),
@@ -86,7 +119,14 @@ export const authAPI = {
     api.post('/auth/logout'),
   
   refreshToken: () => 
-    api.post<AuthResponse>('/auth/refresh'), // Updated return type
+    api.post<AuthResponse>('/auth/refresh'),
+};
+
+// --- SEARCH API FUNCTION ---
+// Ensure this uses POST and sends a JSON body
+export const searchAPI = {
+  search: (query: string) => 
+    api.post<SearchResponse>('/search', { query, max_results: 10 }),
 };
 
 export default api;
