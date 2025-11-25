@@ -24,19 +24,23 @@ const ImageGeneration = () => {
     setGeneratedImage(null); // Clear previous image while loading
     
     try {
-      // Fixed the typo here: changed 'constQP' to 'const'
       const response = await imageAPI.generate(prompt);
-      // Assuming the API returns { image_url: "..." }
+      
+      if (response.data.status === 'error') {
+        throw new Error(response.data.error || 'Image generation failed');
+      }
+
       setGeneratedImage(response.data.image_url);
       toast({
         title: "Success!",
         description: "Your image has been generated.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Generation error:', error);
+      const errorMessage = error.response?.data?.detail || error.message || "Unable to generate image. Please try again.";
       toast({
         title: "Generation failed",
-        description: "Unable to generate image. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

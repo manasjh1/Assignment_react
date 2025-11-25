@@ -103,6 +103,9 @@ export interface SearchResponse {
 export interface ImageResponse {
   image_url: string;
   prompt: string;
+  status: string;
+  provider: string;
+  error?: string;
 }
 
 export const authAPI = {
@@ -136,8 +139,8 @@ export const searchAPI = {
 
 // --- IMAGE API FUNCTION ---
 export const imageAPI = {
-  generate: (prompt: string) =>
-    api.post<ImageResponse>('/image/generate', { prompt }),
+  generate: (prompt: string, model: string = "flux", width: number = 1024, height: number = 1024) =>
+    api.post<ImageResponse>('/image/generate', { prompt, model, width, height }),
 };
 
 export default api;
