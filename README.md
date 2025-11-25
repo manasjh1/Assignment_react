@@ -1,73 +1,137 @@
-# Welcome to your Lovable project
+-----
 
-## Project info
+# Assignment Frontend
 
-**URL**: https://lovable.dev/projects/4d673d3e-ba2c-41a1-a5fb-50513e7ede55
+A modern, responsive web application built with **React**, **Vite**, and **TypeScript**. This application serves as the user interface for the Assignment Backend, providing Authentication, Web Search capabilities, and AI Image Generation.
 
-## How can I edit this code?
+It utilizes **Shadcn UI** for a polished aesthetic and **Tailwind CSS** for styling, offering a seamless experience with Dark/Light mode support.
 
-There are several ways of editing your application.
+## 🚀 Deployment
 
-**Use Lovable**
+  * **Frontend Base URL:** *(Insert your deployed frontend link here, e.g., Vercel/Netlify)*
+  * **Backend API Documentation:** [https://assignment-e8x8.onrender.com/docs](https://assignment-e8x8.onrender.com/docs)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4d673d3e-ba2c-41a1-a5fb-50513e7ede55) and start prompting.
+## ✨ Key Features
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🔐 Authentication & User Management
 
-**Use your preferred IDE**
+  * **Sign Up & Verification:** Register a new account and verify identity via OTP (SMS).
+  * **Secure Login:** JWT-based authentication with access and refresh token handling.
+  * **Password Recovery:** "Forgot Password" flow using phone number verification.
+  * **Profile Dashboard:** View user details, account status, and membership duration.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 🔍 Web Search (MCP Integration)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+  * **AI-Powered Search:** Interface to query the backend's DuckDuckGo Model Context Protocol (MCP) service.
+  * **Search History:** Automatically saves search queries and results to the user's history.
+  * **Management:** View, edit, or delete past search history records from the Dashboard.
 
-Follow these steps:
+### 🎨 AI Image Generation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+  * **Text-to-Image:** Interface for the Flux MCP (with Clipdrop fallback) to generate images from prompts.
+  * **Gallery:** View generated images in the history dashboard.
+  * **Management:** Edit prompts or delete generated images from history.
+  * **Download:** One-click download for generated images.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 🛠️ UI/UX
 
-# Step 3: Install the necessary dependencies.
-npm i
+  * **Responsive Design:** Fully mobile-responsive layout using a sidebar/drawer navigation.
+  * **Theme Support:** Built-in Dark and Light mode toggler.
+  * **Interactive Feedback:** Toast notifications (Sonner/Hot-Toast) for success/error states.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🏗️ Tech Stack
+
+  * **Framework:** React 18 + Vite
+  * **Language:** TypeScript
+  * **Styling:** Tailwind CSS
+  * **UI Library:** Shadcn UI (based on Radix UI)
+  * **Icons:** Lucide React
+  * **Routing:** React Router DOM v6
+  * **State/Data Fetching:** TanStack Query (React Query)
+  * **HTTP Client:** Axios
+  * **Package Manager:** NPM / Bun
+
+## ⚙️ Configuration
+
+The application is currently configured to communicate with the live backend.
+Location: `src/services/api.ts`
+
+```typescript
+const API_BASE_URL = 'https://assignment-e8x8.onrender.com';
+```
+
+## 🛠️ Local Installation & Setup
+
+Follow these steps to run the project locally.
+
+### 1\. Clone the Repository
+
+```bash
+git clone <repository_url>
+cd Assignment_react
+```
+
+### 2\. Install Dependencies
+
+This project contains a `bun.lockb` file, but also a `package-lock.json`. You can use either npm or Bun.
+
+**Using npm:**
+
+```bash
+npm install
+```
+
+**Using Bun:**
+
+```bash
+bun install
+```
+
+### 3\. Run Development Server
+
+Start the Vite development server.
+
+**Using npm:**
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**Using Bun:**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+bun run dev
+```
 
-**Use GitHub Codespaces**
+The application will launch at `http://localhost:8080` (port configured in `vite.config.ts`).
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 4\. Build for Production
 
-## What technologies are used for this project?
+To create an optimized production build:
 
-This project is built with:
+```bash
+npm run build
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📂 Project Structure
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/4d673d3e-ba2c-41a1-a5fb-50513e7ede55) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```
+src/
+├── components/         # Reusable UI components (Shadcn, etc.)
+│   ├── ui/             # Radix UI primitives (Button, Input, Card, etc.)
+│   ├── ThemeToggle.tsx # Dark/Light mode switch
+│   └── ProtectedRoute.tsx # Route guard for auth
+├── contexts/           # React Contexts
+│   ├── AuthContext.tsx # Auth state management
+│   └── ThemeProvider.tsx
+├── hooks/              # Custom hooks (use-mobile, use-toast)
+├── pages/              # Application Routes
+│   ├── Dashboard.tsx   # Main user hub
+│   ├── Login.tsx       # Sign in page
+│   ├── Register.tsx    # Sign up page
+│   ├── Search.tsx      # Search interface
+│   └── ImageGen.tsx    # Image generation interface
+├── services/           # API configuration
+│   └── api.ts          # Axios instance and endpoints
+└── lib/                # Utilities (cn, clsx)
+```
